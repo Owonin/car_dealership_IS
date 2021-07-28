@@ -2,8 +2,9 @@ package com.spring.car_dealership_IS.controller;
 
 import com.spring.car_dealership_IS.domain.Car;
 import com.spring.car_dealership_IS.servicees.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.spring.car_dealership_IS.servicees.ImgService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,11 +13,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/")
 public class CarController {
 
-    @Autowired
-    CarService carService;
+    public CarController(CarService carService, ImgService imgService) {
+        this.carService = carService;
+        this.imgService = imgService;
+    }
+
+    private final CarService carService;
+    private final ImgService imgService;
+
 
     @GetMapping("cars")
-    public List<Car> index(@RequestParam(value = "limit", defaultValue = "100") Long limit) {
+    public List<Car> index(
+            @RequestParam(value = "limit", defaultValue = "100") Long limit) {
         return carService.findAllCars()
                 .stream()
                 .limit(limit)
@@ -30,20 +38,26 @@ public class CarController {
     }
 
     @PostMapping("cars")
-    public void create(@RequestBody Car car) {
+    public void create(@RequestBody Car car,
+                       @RequestParam(value = "img" ,required = false) MultipartFile img) {
         carService.create(car);
+        if(img!=null)
+            imgService.saveImg(car.getId(),img);
     }
 
     @PutMapping("cars/{carId}")
     public void update(@PathVariable("carId") Car carFromDb,
-                       @RequestBody Car car){
-        carService.update(car, carFromDb);
+                       @RequestBody Car car,
+                       @RequestParam(value = "img", required = false) MultipartFile img){
 
+        carService.update(car, carFromDb);
+        if(img!=null)
+            imgService.saveImg(car.getId(), img);
     }
 
     @DeleteMapping("cars/{carId}")
-    public void delete(@PathVariable("carId") Car car){
-        carService.delete(car);
+    public void delete(@PathVariable("carId") String carId){
+        carService.delete(carId);
     }
 
 }

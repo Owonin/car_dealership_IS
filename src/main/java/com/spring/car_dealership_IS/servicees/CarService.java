@@ -15,5 +15,5 @@ public interface CarService {
 
     boolean update(Car car, Car carFromDb);
 
-    boolean delete(Car car);
+    boolean delete(String id);
 }

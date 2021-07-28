@@ -45,6 +45,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         carService.create(car);
         markDao.save(mark);
 
+
         Car car2 = new Car();
         car2.setId("2");
         car2.setEngine("Petrol");

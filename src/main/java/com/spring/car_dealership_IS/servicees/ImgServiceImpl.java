@@ -1,28 +1,30 @@
 package com.spring.car_dealership_IS.servicees;
 
 import com.spring.car_dealership_IS.domain.Car;
+import com.spring.car_dealership_IS.domain.dao.CarDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 @Service
 @Slf4j
 public class ImgServiceImpl implements ImgService {
 
-    @Autowired
-    CarService carService;
+
+    public ImgServiceImpl(CarDao carDao) {
+        this.carDao = carDao;
+    }
+
+    private final CarDao carDao;
 
 
     @Override
     public void saveImg(String carId, MultipartFile file) {
         try {
-            Car car = carService.findCarById(carId);
+            Car car = carDao.findById(carId).orElseThrow(NullPointerException::new);
 
             Byte[] byteObjects = new Byte[file.getBytes().length];
 
@@ -34,7 +36,7 @@ public class ImgServiceImpl implements ImgService {
 
             car.setCarImage(byteObjects);
 
-            carService.create(car);
+            carDao.save(car);
         } catch (IOException e) {
             log.error("Error occurred", e);
 

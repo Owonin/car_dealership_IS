@@ -5,8 +5,6 @@ import com.spring.car_dealership_IS.domain.dao.CarDao;
 import com.spring.car_dealership_IS.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +14,6 @@ import java.util.List;
 public class CarServiceImpl implements CarService {
 
     private final CarDao carDao;
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     public CarServiceImpl(CarDao carDao) {
         this.carDao = carDao;
@@ -49,10 +45,10 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public boolean delete(Car car) {
-        if (carDao.existsById(car.getId())) {
-            carDao.deleteById(car.getId());
-            log.info("Car with id " + car.getId() + " has been deleted");
+    public boolean delete(String id) {
+        if (carDao.existsById(id)) {
+            carDao.deleteById(id);
+            log.info("Car with id " + id + " has been deleted");
             return true;
         }
         log.error("This car has not been found");
