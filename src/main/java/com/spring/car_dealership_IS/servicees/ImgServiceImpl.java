@@ -1,9 +1,9 @@
 package com.spring.car_dealership_IS.servicees;
 
-import com.spring.car_dealership_IS.domain.Car;
-import com.spring.car_dealership_IS.domain.dao.CarDao;
+import com.spring.car_dealership_IS.domain.SimpleEntityWithImg;
+import com.spring.car_dealership_IS.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,33 +14,36 @@ import java.io.IOException;
 public class ImgServiceImpl implements ImgService {
 
 
-    public ImgServiceImpl(CarDao carDao) {
-        this.carDao = carDao;
+    public ImgServiceImpl(MongoRepository<SimpleEntityWithImg, String> dao) {
+        this.dao = dao;
     }
 
-    private final CarDao carDao;
+    private final MongoRepository<SimpleEntityWithImg, String> dao;
 
 
     @Override
-    public void saveImg(String carId, MultipartFile file) {
+    public void saveImg(String id, MultipartFile file) {
         try {
-            Car car = carDao.findById(carId).orElseThrow(NullPointerException::new);
+            if (file == null) throw new NullPointerException("file is empty");
+
+            SimpleEntityWithImg entity = dao.findById(id).orElseThrow(NotFoundException::new);
 
             Byte[] byteObjects = new Byte[file.getBytes().length];
 
             int i = 0;
 
-            for (byte b : file.getBytes()){
+            for (byte b : file.getBytes()) {
                 byteObjects[i++] = b;
             }
 
-            car.setCarImage(byteObjects);
+            entity.setImg(byteObjects);
 
-            carDao.save(car);
+            dao.save(entity);
         } catch (IOException e) {
             log.error("Error occurred", e);
-
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            log.error(e.toString());
         }
     }
 }

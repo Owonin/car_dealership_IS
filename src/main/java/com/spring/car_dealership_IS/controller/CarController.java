@@ -41,8 +41,7 @@ public class CarController {
     public void create(@RequestBody Car car,
                        @RequestParam(value = "img" ,required = false) MultipartFile img) {
         carService.create(car);
-        if(img!=null)
-            imgService.saveImg(car.getId(),img);
+        imgService.saveImg(car.getId(),img);
     }
 
     @PutMapping("cars/{carId}")
@@ -51,8 +50,7 @@ public class CarController {
                        @RequestParam(value = "img", required = false) MultipartFile img){
 
         carService.update(car, carFromDb);
-        if(img!=null)
-            imgService.saveImg(car.getId(), img);
+        imgService.saveImg(car.getId(), img);
     }
 
     @DeleteMapping("cars/{carId}")

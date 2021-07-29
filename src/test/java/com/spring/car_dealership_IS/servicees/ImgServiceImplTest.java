@@ -52,6 +52,22 @@ class ImgServiceImplTest {
         verify(carDao, times(1)).findById(any());
         verify(carDao, times(1)).save(argumentCaptor.capture());
         Car savedCar = argumentCaptor.getValue();
-        assertEquals(savedCar.getCarImage().length, multipartFile.getBytes().length);
+        assertEquals(savedCar.getImg().length, multipartFile.getBytes().length);
+    }
+
+    @Test
+    @DisplayName("Should write error info in the log")
+    void EmptyFileTest() throws IOException {
+        String id = "1";
+
+        Car car = new Car();
+        car.setId(id);
+
+        //when
+        imgService.saveImg(id,null);
+
+        //then
+        verify(carDao, never()).findById(any());
+        verify(carDao, never()).save(any());
     }
 }

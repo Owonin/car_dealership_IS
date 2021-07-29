@@ -72,15 +72,6 @@ class CarServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should delete all data in database")
-    void deleteAll() {
-
-        verify(carDao, times(1)).deleteAll();
-        verify(carDao, never()).delete(any());
-        verify(carDao, never()).findById(any());
-    }
-
-    @Test
     @DisplayName("Should change car name but save old ID")
     void update() {
         //given
