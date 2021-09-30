@@ -1,9 +1,8 @@
 package com.spring.car_dealership_IS.servicees;
 
-import com.spring.car_dealership_IS.domain.SimpleEntityWithImg;
-import com.spring.car_dealership_IS.exceptions.NotFoundException;
+import com.spring.car_dealership_IS.domain.BaseModelWithImg;
+import com.spring.car_dealership_IS.domain.dao.BaseModelDao;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,11 +13,12 @@ import java.io.IOException;
 public class ImgServiceImpl implements ImgService {
 
 
-    public ImgServiceImpl(MongoRepository<SimpleEntityWithImg, String> dao) {
+
+    private final BaseModelDao dao;
+
+    public ImgServiceImpl(BaseModelDao dao) {
         this.dao = dao;
     }
-
-    private final MongoRepository<SimpleEntityWithImg, String> dao;
 
 
     @Override
@@ -26,7 +26,7 @@ public class ImgServiceImpl implements ImgService {
         try {
             if (file == null) throw new NullPointerException("file is empty");
 
-            SimpleEntityWithImg entity = dao.findById(id).orElseThrow(NotFoundException::new);
+            BaseModelWithImg entity = dao.findById(id).orElse( null);
 
             Byte[] byteObjects = new Byte[file.getBytes().length];
 
@@ -36,6 +36,7 @@ public class ImgServiceImpl implements ImgService {
                 byteObjects[i++] = b;
             }
 
+            assert entity != null;
             entity.setImg(byteObjects);
 
             dao.save(entity);

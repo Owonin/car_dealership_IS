@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @AllArgsConstructor
 @NoArgsConstructor
-public class Mark extends SimpleEntityWithImg {
+public class Mark extends BaseModelWithImg {
     private String CountryName;
 
     public String getCountryName() {
