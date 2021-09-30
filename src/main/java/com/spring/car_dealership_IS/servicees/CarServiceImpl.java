@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,7 +57,9 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> findAllCars() {
-        return carDao.findAll();
+    public List<Car> findAllCars(long limit, long offset) {
+        if (limit > 0)
+            return carDao.findAll().stream().skip(offset).limit(limit).collect(Collectors.toList());
+        return carDao.findAll().stream().skip(offset).collect(Collectors.toList());
     }
 }

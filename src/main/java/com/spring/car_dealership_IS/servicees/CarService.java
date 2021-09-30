@@ -9,11 +9,11 @@ public interface CarService {
 
     Car findCarById(String id);
 
-    List<Car> findAllCars();
-
     void deleteAll();
 
     boolean update(Car car, Car carFromDb);
 
     boolean delete(String id);
+
+    List<Car> findAllCars(long limit, long offset);
 }

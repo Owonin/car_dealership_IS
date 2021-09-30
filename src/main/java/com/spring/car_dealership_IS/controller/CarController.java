@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/")
@@ -24,11 +23,9 @@ public class CarController {
 
     @GetMapping("cars")
     public List<Car> index(
-            @RequestParam(value = "limit", defaultValue = "100") Long limit) {
-        return carService.findAllCars()
-                .stream()
-                .limit(limit)
-                .collect(Collectors.toList());
+            @RequestParam(value = "limit", defaultValue = "-1") Long limit,
+            @RequestParam(value = "offset", defaultValue = "0") Long offset) {
+        return carService.findAllCars(limit, offset);
     }
 
     @GetMapping("cars/{carId}")
